@@ -1,62 +1,93 @@
-import React, { ReactNode, useState } from 'react';
-import { Box, Button, List, ListItemButton, ListItemIcon, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Button, List, ListItemButton, ListItemIcon, SvgIconTypeMap, Typography } from '@mui/material';
 import { Close, Home, LibraryAdd, Menu, Person } from '@mui/icons-material';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
 
 type OptionsSideBarType = {
   path: string;
   label: string;
-  icon: ReactNode;
+  Icon: OverridableComponent<SvgIconTypeMap<{}, "svg">> & { muiName: string; };
+  isActive: boolean;
 }
+
+type ActiveRouteProps = {
+  active: boolean,
+  inner: string | null
+} | undefined
 
 export const SideBar: React.FC = () => {
   const [open, setOpen] = useState<boolean>(true);
-  const toggleMenu = () => setOpen(!open);
+  const { pathname } = useLocation();
   const navigate = useNavigate();
+  const [active, setActive] = useState<ActiveRouteProps>(undefined);
+  const toggleMenu = () => setOpen(!open);
 
   const optionsSidebar: OptionsSideBarType[] = [
-    { 
-      label: "Início", 
-      icon: <Home sx={{ color: 'white', width: 30, height: 30 }} />, 
-      path: '/' 
-    }, 
-    { 
-      label: "Adicioanar", 
-      icon: <LibraryAdd sx={{ color: 'white', width: 30, height: 30 }} />, 
-      path: '/teste3' 
-    }, 
-    { 
-      label: "Meu perfil", 
-      icon: <Person sx={{ color: 'white', width: 30, height: 30 }} />, 
-      path: '/teste' 
-    }, 
-  ]
+    {
+      label: "Início",
+      Icon: Home,
+      path: '/',
+      isActive: active?.inner === 'Início' || pathname === '/'
+    },
+    {
+      label: "Adicioanar",
+      Icon: LibraryAdd,
+      path: '/teste3',
+      isActive: active?.inner === 'Adicioanar'
+    },
+    {
+      label: "Meu perfil",
+      Icon: Person,
+      path: '/teste',
+      isActive: active?.inner === 'Meu perfil'
+    },
+  ];
+
+  console.log(optionsSidebar)
+
+  const activeRouteSideBar = (currentTarget: EventTarget & HTMLDivElement, path: string) => {
+    let innerText = currentTarget.innerText; 
+    const item = innerText !== "" || !!innerText ? innerText : currentTarget.textContent;
+    let getLabel = optionsSidebar.find(option => option.label === item);
+    if (getLabel !== null) {
+      setActive({
+        active: true,
+        inner: item
+      });
+      return navigate(path)
+    }
+  }
 
   const widthSx: string = open ? "w-[300px]" : "w-[95px]";
 
   return (
     <Box className={`bg-[#15171a] h-screen block duration-300 text-center ${widthSx}`}>
-
-      <List component="nav" className='text-center justify-center '>
-        {optionsSidebar.map(({ icon, label, path }) => (
+      <List component="nav" className='text-center justify-center' sx={{mt: 5}}>
+        {optionsSidebar.map(({ Icon, label, path, isActive }) => (
           <ListItemButton
             className='items-center text-center m-auto'
-            sx={{m: '10px 0' }}
-            onClick={(event) => navigate(path)}
+            sx={{ m: '10px 0' }}
+            onClick={({ currentTarget }) => activeRouteSideBar(currentTarget, path)}
           >
             <ListItemIcon
-            className='duration-300'
+              className='duration-300'
               sx={{ ml: !open ? 2 : 0 }}
             >
-              {icon}
+              <Icon
+                className={isActive ? 'animate-pulse' : ''}
+                sx={{
+                  color: isActive ? 'orangered' : 'white',
+                  width: 30,
+                  height: 30
+                }}
+              />
             </ListItemIcon>
-            {open &&
-              <Typography
-                className='text-white'
-                sx={{ fontSize: 20, ml: -1 }}
-              >{label}
-              </Typography>
-            }
+            <Typography
+              className={open ? 'block' : 'hidden'}
+              sx={{ fontSize: 20, ml: -1, color: isActive ? 'orangered' : 'white' }}
+            >{label}
+            </Typography>
           </ListItemButton>
         ))}
       </List>
