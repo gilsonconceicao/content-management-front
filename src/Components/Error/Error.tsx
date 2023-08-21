@@ -8,7 +8,6 @@ type ErrorProps = {
 
 export const Error = ({ error }: ErrorProps) => {
     const messageError = error?.response?.data?.error; 
-    debugger
     return (
         <Box className='bg-red-500 p-2 rounded text-white'>
             {messageError ?? error?.message}

@@ -6,9 +6,13 @@ import { Button, Stack, Typography } from "@mui/material"
 import { useLoginMutation } from "Hooks/Auth/LoginHook"
 import { IApiTypeError, useApiError } from "Contexts/ApiErrorContext"
 import { Error } from "Components/Error/Error"
+import { useAuth } from "Contexts/AuthContext"
+import { Navigate, useNavigate } from "react-router-dom"
 
 export const LoginContainer = () => {
-  const { setSubmitError, submitError } = useApiError(); 
+  const { setSubmitError, submitError } = useApiError();
+  const navigate = useNavigate();
+  const { isAuthenticated, login } = useAuth();
   const {
     register,
     handleSubmit,
@@ -16,13 +20,16 @@ export const LoginContainer = () => {
   } = useForm({
     resolver: yupResolver(loginSchema()),
     defaultValues: defaultValuesLogin
-  }); 
+  });
 
   const onSuccess = (values: any) => {
-    setSubmitError(undefined); 
+    const token = values?.token;
+    if (!!token) login(token);
+    setSubmitError(undefined);
+    navigate('/');
   }
   const onError = (error: IApiTypeError) => {
-    setSubmitError(error); 
+    setSubmitError(error);
   }
 
   const { mutate, isError, isLoading } = useLoginMutation(onSuccess, onError);
@@ -30,6 +37,10 @@ export const LoginContainer = () => {
   const onSubmit = (data: any) => {
     mutate(data);
   };
+
+  if (isAuthenticated) {
+    return <Navigate to='/' />
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={{ margin: 10 }}>
@@ -51,7 +62,7 @@ export const LoginContainer = () => {
           error={errors}
           name="password"
         />
-        {isError && <Error error={submitError!}/>}
+        {isError && <Error error={submitError!} />}
         <Button variant="contained" disabled={isLoading} sx={{ p: 1 }} type="submit">Entrar</Button>
       </Stack>
     </form>
