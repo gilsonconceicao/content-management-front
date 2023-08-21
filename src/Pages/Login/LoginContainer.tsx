@@ -4,8 +4,11 @@ import { defaultValuesLogin, loginSchema } from "./Schema/LoginSchema"
 import { TextFormField } from "Components/TextFormField/TextFormField"
 import { Button, Stack, Typography } from "@mui/material"
 import { useLoginMutation } from "Hooks/Auth/LoginHook"
+import { IApiTypeError, useApiError } from "Contexts/ApiErrorContext"
+import { Error } from "Components/Error/Error"
 
 export const LoginContainer = () => {
+  const { setSubmitError, submitError } = useApiError(); 
   const {
     register,
     handleSubmit,
@@ -13,21 +16,20 @@ export const LoginContainer = () => {
   } = useForm({
     resolver: yupResolver(loginSchema()),
     defaultValues: defaultValuesLogin
-  })
+  }); 
 
   const onSuccess = (values: any) => {
-    debugger
+    setSubmitError(undefined); 
   }
-  const onError = (values: any) => {
-    debugger
+  const onError = (error: IApiTypeError) => {
+    setSubmitError(error); 
   }
 
-  const { mutate } = useLoginMutation(onSuccess, onError);
+  const { mutate, isError, isLoading } = useLoginMutation(onSuccess, onError);
 
   const onSubmit = (data: any) => {
     mutate(data);
   };
-
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={{ margin: 10 }}>
@@ -49,7 +51,8 @@ export const LoginContainer = () => {
           error={errors}
           name="password"
         />
-        <Button variant="contained" sx={{ p: 1 }} type="submit">Entrar</Button>
+        {isError && <Error error={submitError!}/>}
+        <Button variant="contained" disabled={isLoading} sx={{ p: 1 }} type="submit">Entrar</Button>
       </Stack>
     </form>
   )
