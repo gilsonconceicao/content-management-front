@@ -6,7 +6,6 @@ import {
 import { PrivateRouters } from "./PrivateRouters";
 import { LoginContainer } from "Pages/Login/LoginContainer";
 
-
 const Router = () => {
   return (
     <BrowserRouter>

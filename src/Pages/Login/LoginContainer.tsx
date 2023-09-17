@@ -60,6 +60,7 @@ export const LoginContainer = () => {
           fullWidth
           required
           error={errors}
+          typeInput="password"
           name="password"
         />
         {isError && <Error error={submitError!} />}

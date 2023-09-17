@@ -2,17 +2,18 @@ import { TextField } from '@mui/material';
 import React, { FC } from 'react'
 import { UseFormRegister } from 'react-hook-form'
 
-interface TextFormFieldProps {
+type TextFormFieldProps = {
   label: string;
   name: string;
   required?: boolean;
+  typeInput?: React.HTMLInputTypeAttribute | undefined
   register: UseFormRegister<any>;
   fullWidth?: boolean;
   error?: any;
 };
 
 export const TextFormField: FC<TextFormFieldProps> = (props) => {
-  const { label, error, register, name, fullWidth, required } = props;
+  const { label, error, register, name, fullWidth, required, typeInput } = props;
   const hasError= Object.keys(error).length > 0; 
 
   return (
@@ -22,6 +23,7 @@ export const TextFormField: FC<TextFormFieldProps> = (props) => {
         label={label}
         variant='outlined'
         error={hasError}
+        type={typeInput}
         required={required}
         {...register(name)}
       />

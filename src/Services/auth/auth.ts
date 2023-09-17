@@ -6,5 +6,9 @@ export type PayloadLogin = {
 }
 
 export async function loginbyEmailAndPassword(payload: PayloadLogin) {
-  return await api({ endpoint: "/Auth", method: "POST", payload }); 
+  return await api({ 
+    endpoint: "/Auth", 
+    method: "POST", 
+    payload 
+  }); 
 }
