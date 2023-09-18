@@ -31,20 +31,12 @@ export const SideBar: React.FC = () => {
       isActive: active?.inner === 'Início' || pathname === '/'
     },
     {
-      label: "Adicioanar",
-      Icon: LibraryAdd,
-      path: '/teste3',
-      isActive: active?.inner === 'Adicioanar'
-    },
-    {
       label: "Meu perfil",
       Icon: Person,
       path: '/teste',
       isActive: active?.inner === 'Meu perfil'
     },
   ];
-
-  console.log(optionsSidebar)
 
   const activeRouteSideBar = (currentTarget: EventTarget & HTMLDivElement, path: string) => {
     let innerText = currentTarget.innerText; 
