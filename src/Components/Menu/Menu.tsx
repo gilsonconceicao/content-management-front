@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, List, ListItemButton, ListItemIcon, SvgIconTypeMap, Typography } from '@mui/material';
-import { Close, Home, LibraryAdd, Menu, Person } from '@mui/icons-material';
+import { Close, Home, Menu, Person } from '@mui/icons-material';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { OverridableComponent } from '@mui/material/OverridableComponent';
 
