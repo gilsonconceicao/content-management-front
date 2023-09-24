@@ -13,7 +13,7 @@ type PostFormProps = {
   setPostId: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
-const invalidValues = (value: string): boolean => {
+export const invalidValues = (value: string): boolean => {
   if (value === undefined || value === null || value === "") {
     return true
   }
@@ -21,21 +21,24 @@ const invalidValues = (value: string): boolean => {
 }
 
 export const PostForm = ({ postOptionsList, onAddPost, postSelected, setPostId, isAdd }: PostFormProps) => {
-  const { watch } = useFormContext();
+  const { watch, setValue } = useFormContext();
   const postId = watch('postId');
 
   useMemo(() => {
-    if (!invalidValues(postId)) {
+    if (!invalidValues(postId) && !isAdd) {
       setPostId(postId);
     }
-  }, [postId, setPostId]); 
+    if (isAdd) {
+      setValue('postId', postSelected?.title);
+      setValue('postIdDisplay', postSelected?.title);
+    }
+  }, [postId, setPostId, isAdd]); 
 
   return (
     <Stack spacing={2} >
       <Autocomplete
         label='Selecione um post'
         name='postId'
-        value={isAdd ? {label: postSelected?.title, value: "create"} : {label: watch('postIdDisplay') ?? '', value: postId ?? ''} as any}
         options={postOptionsList ?? []}
       />
 
@@ -47,7 +50,6 @@ export const PostForm = ({ postOptionsList, onAddPost, postSelected, setPostId, 
       >
         Adicionar post
       </Button>
-
 
       {postSelected &&
         <Grid direction='row' alignItems='center' >

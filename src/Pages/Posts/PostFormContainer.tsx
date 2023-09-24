@@ -26,6 +26,7 @@ export const PostFormContainer = () => {
     if (postId !== undefined) {
       const find = postsData?.find(item => item.id === postId);
       setFormValues(find as PostType);
+      setIsAdd(false);
     }
   }, [postId, postsData]);
 

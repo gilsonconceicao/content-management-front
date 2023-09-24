@@ -14,10 +14,11 @@ type AutocompleteProps = {
 
 export default function Autocomplete({ name, options, value, label }: AutocompleteProps) {
   const [inputValue, setInputValue] = React.useState('');
-  const { setValue, errors } = useFormContext();
-
+  const { setValue, errors, watch} = useFormContext();
   const hasError = Object.keys(errors).length > 0;
-  debugger
+
+  console.log('Value autocomplete: ', watch(name))
+
   const {
     getRootProps,
     getInputProps,
@@ -28,7 +29,7 @@ export default function Autocomplete({ name, options, value, label }: Autocomple
   } = useAutocomplete({
     id: 'controlled-state-demo',
     options,
-    value,
+    value: watch(name) === null ? value : {label: watch(name+'Display'), value: watch(name)},
     onChange: (event, newValue) => {
       setValue(name, newValue?.value);
       setValue(name + 'Display', newValue?.label)
