@@ -1,7 +1,7 @@
 import { useForm } from "react-hook-form"
 import { yupResolver } from "@hookform/resolvers/yup"
 import { defaultValuesLogin, loginSchema } from "./Schema/LoginSchema"
-import { TextFormField } from "Components/TextFormField/TextFormField"
+import { TextFormField } from "Components/Forms/TextFormField/TextFormField"
 import { Button, Stack, Typography } from "@mui/material"
 import { useLoginMutation } from "Hooks/Auth/LoginHook"
 import { IApiTypeError, useApiError } from "Contexts/ApiErrorContext"
@@ -14,9 +14,7 @@ export const LoginContainer = () => {
   const navigate = useNavigate();
   const { isAuthenticated, login } = useAuth();
   const {
-    register,
     handleSubmit,
-    formState: { errors },
   } = useForm({
     resolver: yupResolver(loginSchema()),
     defaultValues: defaultValuesLogin
@@ -47,19 +45,15 @@ export const LoginContainer = () => {
       <Stack spacing={2} maxWidth={500} justifyContent='center' m='20vh auto'>
         <Typography variant="h2">Login</Typography>
         <TextFormField
-          register={register}
           label="Email"
-          error={errors}
           name="email"
           fullWidth
           required
         />
         <TextFormField
-          register={register}
           label="Senha"
           fullWidth
           required
-          error={errors}
           typeInput="password"
           name="password"
         />
