@@ -17,7 +17,7 @@ export default function Autocomplete({ name, options, value, label }: Autocomple
   const { setValue, errors, watch} = useFormContext();
   const hasError = Object.keys(errors).length > 0;
 
-  console.log('Value autocomplete: ', watch(name))
+  console.log('TESTE: ', {id: watch(name), value: value})
 
   const {
     getRootProps,
@@ -29,10 +29,10 @@ export default function Autocomplete({ name, options, value, label }: Autocomple
   } = useAutocomplete({
     id: 'controlled-state-demo',
     options,
-    value: watch(name) === null ? value : {label: watch(name+'Display'), value: watch(name)},
+    value: typeof watch(name) === 'object' ? watch(name) : value,
     onChange: (event, newValue) => {
       setValue(name, newValue?.value);
-      setValue(name + 'Display', newValue?.label)
+      setValue(name + 'Display', newValue?.label);
     },
     inputValue,
     onInputChange: (event, newInputValue) => setInputValue(newInputValue),

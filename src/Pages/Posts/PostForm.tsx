@@ -8,8 +8,8 @@ import React, { useMemo } from 'react'
 type PostFormProps = {
   postOptionsList: OptionSelect[] | undefined;
   onAddPost: () => void;
-  isAdd: boolean;
   postSelected: PostType | null;
+  isAdd: boolean
   setPostId: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
@@ -21,18 +21,14 @@ export const invalidValues = (value: string): boolean => {
 }
 
 export const PostForm = ({ postOptionsList, onAddPost, postSelected, setPostId, isAdd }: PostFormProps) => {
-  const { watch, setValue } = useFormContext();
+  const { watch } = useFormContext();
   const postId = watch('postId');
 
   useMemo(() => {
-    if (!invalidValues(postId) && !isAdd) {
+    if (invalidValues(postId) === false) {
       setPostId(postId);
     }
-    if (isAdd) {
-      setValue('postId', postSelected?.title);
-      setValue('postIdDisplay', postSelected?.title);
-    }
-  }, [postId, setPostId, isAdd]); 
+  }, [postId, setPostId]);
 
   return (
     <Stack spacing={2} >
@@ -53,7 +49,7 @@ export const PostForm = ({ postOptionsList, onAddPost, postSelected, setPostId, 
 
       {postSelected &&
         <Grid direction='row' alignItems='center' >
-          <Chip label={`Título: ${postSelected.title}`} variant="outlined" sx={{mb:1}}/>
+          <Chip label={`Título: ${postSelected.title}`} variant="outlined" sx={{ mb: 1 }} />
           <br />
           <Chip label={`Descrição: ${postSelected.description}`} variant="outlined" />
         </Grid>

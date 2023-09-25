@@ -7,5 +7,5 @@ export const postFormValidationSchema = () => {
 }
 
 export const postFormdefaultValues = {
-  postId: null
+  postId: {label: "Teste", value: "Element"}
 }

@@ -26,15 +26,15 @@ export const PostFormContainer = () => {
     if (postId !== undefined) {
       const find = postsData?.find(item => item.id === postId);
       setFormValues(find as PostType);
-      setIsAdd(false);
+      setIsAdd(false)
     }
   }, [postId, postsData]);
 
   const createPostModeManual = (values: FieldValues) => {
     setFormValues(values as PostType);
     setOpen(false);
+    setIsAdd(true)
     setPostId(undefined);
-    setIsAdd(true);
   };
 
   const postSelectedbyId = ({ postId }: FieldValues) => {
@@ -49,10 +49,10 @@ export const PostFormContainer = () => {
         onSubmit={postSelectedbyId}
       >
         <PostForm
+          isAdd={isAdd}
           postOptionsList={postOptionsList}
           postSelected={formValues}
           setPostId={setPostId}
-          isAdd={isAdd}
           onAddPost={() => setOpen(true)}
         />
       </FormProvider>
